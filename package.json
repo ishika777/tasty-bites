@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node server/index.ts",
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
-    "start": "node server/index.js"
+    "start": "node server/index.ts"
   },
   "keywords": [],
   "author": "",

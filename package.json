@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node server/index.ts",
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
-    "start": "ts-node server/index.ts"
+    "start": "NODE_OPTIONS='--max-old-space-size=2048' ts-node server/index.ts"
   },
   "keywords": [],
   "author": "",

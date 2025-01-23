@@ -1,5 +1,5 @@
 import express from "express";
-import {getOrders, createCheckoutSession} from "../controllers/order.controller"
+import {getOrders} from "../controllers/order.controller"
 import { isAuthenticated } from "../middlwares/isAuthenticated";
 import upload from "../middlwares/multer";
 const router = express.Router()

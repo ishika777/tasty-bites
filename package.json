@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server/index.ts",
+    "dev": "node server/index.ts",
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
-    "start": "nodemon server/index.js"
+    "start": "node server/index.js"
   },
   "keywords": [],
   "author": "",

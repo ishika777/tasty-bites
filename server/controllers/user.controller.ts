@@ -10,7 +10,7 @@ import { sendPasswordResetEmail, sendResetSuccessfulEmail, sendVerificationEmail
 
 export const signup = async(req:Request, res:Response): Promise<void> => {
     try {
-        const {fullname, email, password, contact} = req.body;
+        const {fullname, email, password, contact, admin} = req.body;
 
         let user = await User.findOne({email})
         if(user){
@@ -27,6 +27,7 @@ export const signup = async(req:Request, res:Response): Promise<void> => {
             email,
             password : hashedPassword,
             contact : Number(contact),
+            admin : admin === "true" ? true : false,
             verificationCode,
             verificationCodeExpiresAt : Date.now()+24*60*60*1000 //1day
         })
@@ -48,7 +49,7 @@ export const signup = async(req:Request, res:Response): Promise<void> => {
 
 export const login = async(req:Request, res:Response): Promise<void> => {
     try {
-        const {email, password} = req.body
+        const {email, password, admin} = req.body
         const user = await User.findOne({email})
         if(!user){
             res.status(400).json({
@@ -57,11 +58,26 @@ export const login = async(req:Request, res:Response): Promise<void> => {
             });
             return;
         }
+        if(!user.isVerified){
+            res.status(400).json({
+                success : false,
+                message : "Email not verified"
+            });
+            return;
+        }
+        
         const isCorrectPassword = await bcrypt.compare(password, user.password)
         if(!isCorrectPassword){
             res.status(400).json({
                 success : false,
                 message : "Incorrect email or password"
+            });
+            return;
+        }
+        if(user.admin !== (admin === "true" ? true : false)){
+            res.status(400).json({
+                success : false,
+                message : "Incorrect profile selected"
             });
             return;
         }

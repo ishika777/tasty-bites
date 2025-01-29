@@ -25,14 +25,14 @@ type UserState = {
     isAuthenticated: boolean;
     isCheckingAuth: boolean;
     loading: boolean;
-    signup: (input: SignupInputState) => Promise<void>;
-    login: (input: LoginInputState) => Promise<void>;
-    verifyEmail: (verificationCode: string) => Promise<void>;
-    checkAuthentication: () => Promise<void>;
-    logout: () => Promise<void>;
-    forgotPassword: (email: string) => Promise<void>;
-    resetPassword: (token: string, newPassword: string) => Promise<void>;
-    updateProfile: (input: any) => Promise<void>;
+    signup: (input: SignupInputState) => Promise<boolean>;
+    login: (input: LoginInputState) => Promise<boolean>;
+    verifyEmail: (verificationCode: string) => Promise<boolean>;
+    checkAuthentication: () => Promise<boolean>;
+    logout: () => Promise<boolean>;
+    forgotPassword: (email: string) => Promise<boolean>;
+    resetPassword: (token: string, newPassword: string) => Promise<boolean>;
+    updateProfile: (input: any) => Promise<boolean>;
 };
 
 export const useUserStore = create<UserState>()(
@@ -42,7 +42,7 @@ export const useUserStore = create<UserState>()(
             isAuthenticated: false,
             isCheckingAuth: false,
             loading: false,
-            signup: async (input: SignupInputState) => {
+            signup: async (input: SignupInputState): Promise<boolean> => {
                 try {
                     set({ loading: true });
                     const response = await axios.post(
@@ -55,21 +55,22 @@ export const useUserStore = create<UserState>()(
                         }
                     );
                     if (response.data.success) {
-                        toast(response.data.message);
+                        toast.success(response.data.message);
                         set({
                             user: response.data.user,
                             isAuthenticated: true,
                             loading: false,
                         });
+                        return true;
                     }
                 } catch (error: any) {
                     console.log(error);
-
                     set({ loading: false });
                     toast.error(error.response?.data.message || error.message);
                 }
+                return false;
             },
-            login: async (input: LoginInputState) => {
+            login: async (input: LoginInputState): Promise<boolean> => {
                 try {
                     set({ loading: true });
                     const response = await axios.post(
@@ -82,21 +83,22 @@ export const useUserStore = create<UserState>()(
                         }
                     );
                     if (response.data.success) {
-                        toast(response.data.message);
+                        toast.success(response.data.message);
                         set({
                             user: response.data.user,
                             isAuthenticated: true,
                             loading: false,
                         });
+                        return true;
                     }
                 } catch (error: any) {
                     console.log(error);
-
                     set({ loading: false });
                     toast.error(error.response?.data.message || error.message);
                 }
+                return false;
             },
-            verifyEmail: async (verificationCode: string) => {
+            verifyEmail: async (verificationCode: string): Promise<boolean> => {
                 try {
                     set({ loading: true });
                     const response = await axios.post(
@@ -109,21 +111,22 @@ export const useUserStore = create<UserState>()(
                         }
                     );
                     if (response.data.success) {
-                        toast(response.data.message);
+                        toast.success(response.data.message);
                         set({
                             user: response.data.user,
                             isAuthenticated: true,
                             loading: false,
                         });
+                        return true;
                     }
                 } catch (error: any) {
                     console.log(error);
-
                     set({ loading: false });
                     toast.error(error.response?.data.message || error.message);
                 }
+                return false;
             },
-            checkAuthentication: async () => {
+            checkAuthentication: async (): Promise<boolean> => {
                 try {
                     set({ isCheckingAuth: true });
                     const response = await axios.get(`${USER_API_END_POINT}/check-auth`, {
@@ -137,13 +140,15 @@ export const useUserStore = create<UserState>()(
                             isAuthenticated: true,
                             isCheckingAuth: false,
                         });
+                        return true;
                     }
                 } catch (error: any) {
                     console.log(error);
                     set({ isAuthenticated: false, isCheckingAuth: false });
                 }
+                return false;
             },
-            logout: async () => {
+            logout: async (): Promise<boolean> => {
                 try {
                     set({ loading: true });
                     const response = await axios.post(`${USER_API_END_POINT}/logout`, {
@@ -152,16 +157,18 @@ export const useUserStore = create<UserState>()(
                         },
                     });
                     if (response.data.success) {
-                        toast(response.data.message);
+                        toast.success(response.data.message);
                         set({ user: null, isAuthenticated: false, loading: false });
+                        return true;
                     }
                 } catch (error: any) {
                     console.log(error);
                     set({ loading: false });
                     toast.error(error.response?.data.message || error.message);
                 }
+                return false;
             },
-            forgotPassword: async (email: string) => {
+            forgotPassword: async (email: string): Promise<boolean> => {
                 try {
                     set({ loading: true });
                     const response = await axios.post(`${USER_API_END_POINT}/forgot-password`,{ email },{
@@ -170,16 +177,18 @@ export const useUserStore = create<UserState>()(
                         },
                     });
                     if (response.data.success) {
+                        toast.success(response.data.message);
                         set({ loading: false });
-                        toast(response.data.message);
+                        return true;
                     }
                 } catch (error: any) {
                     console.log(error);
                     set({ loading: false });
                     toast.error(error.response?.data.message || error.message);
                 }
+                return false;
             },
-            resetPassword: async (resetToken: string, newPassword: string) => {
+            resetPassword: async (resetToken: string, newPassword: string): Promise<boolean> => {
                 try {
                     set({ loading: true });
                     const response = await axios.post(
@@ -194,14 +203,16 @@ export const useUserStore = create<UserState>()(
                     if (response.data.success) {
                         toast.success(response.data.message);
                         set({ loading: false });
+                        return true;
                     }
                 } catch (error: any) {
                     console.log(error);
                     set({ loading: false });
                     toast.error(error.response?.data.message || error.message);
                 }
+                return false;
             },
-            updateProfile: async (input: any) => {
+            updateProfile: async (input: any): Promise<boolean> => {
                 try {
                     const response = await axios.put(
                         `${USER_API_END_POINT}/profile/update`,
@@ -213,17 +224,16 @@ export const useUserStore = create<UserState>()(
                         }
                     );
                     if (response.data.success) {
-                        toast.success   (response.data.message);
-                        set({
-                            user: response.data.user,
-                            isAuthenticated: true,
-                        });
+                        toast.success(response.data.message);
+                        set({user: response.data.user, isAuthenticated: true});
+                        return true;
                     }
                 } catch (error: any) {
                     console.log(error);
                     ({ loading: false });
                     toast.error(error.response?.data.message || error.message);
                 }
+                return false;
             },
         }),
         {

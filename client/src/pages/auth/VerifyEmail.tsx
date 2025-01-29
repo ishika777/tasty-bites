@@ -34,8 +34,10 @@ const VerifyEmail = () => {
         e.preventDefault()
         const verificationCode = otp.join("");
         try {
-            await verifyEmail(verificationCode)
-            navigate("/")
+            const success = await verifyEmail(verificationCode)
+            if(success){
+                navigate("/")
+            }
         } catch (error) {
             console.log(error)
         }

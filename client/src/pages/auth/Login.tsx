@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { LoginInputState, userLoginSchema } from "@/schema/userSchema";
 import { Separator } from "@/components/ui/separator";
 import { useUserStore } from "@/store/useUserStore";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 
 
@@ -19,7 +21,12 @@ const Login = () => {
     const [input, setInput] = useState<LoginInputState>({
         email: "",
         password: "",
+        admin: "false"
     });
+
+    const handleRadioChange = (value: "true" | "false") => {
+        setInput((prev) => ({ ...prev, admin: value }));
+    };
 
     const changEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -33,22 +40,18 @@ const Login = () => {
         const result = userLoginSchema.safeParse(input)
         if (!result.success) {
             const fieldErrors = result.error.formErrors.fieldErrors;
-            console.log(fieldErrors)
             setErrors(fieldErrors as Partial<LoginInputState>)
             return;
         }
         //api call
         try {
-            await login(input);
-            navigate("/")
+            const success = await login(input);
+            if(success){
+                navigate("/")
+            }
         } catch (err) {
             console.log(err);
         }
-
-        setInput({
-            email: "",
-            password: "",
-        });
     };
 
     return (
@@ -102,6 +105,19 @@ const Login = () => {
                         }
                     </div>
                 </div>
+
+                <RadioGroup defaultValue={input.admin} name="admin" onValueChange={handleRadioChange}>
+                    <div className="flex items-center mb-6 gap-6">
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="false" id="r1"  />
+                            <Label htmlFor="r1">User</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="true" id="r2" />
+                            <Label htmlFor="r2">Admin</Label>
+                        </div>
+                    </div>
+                </RadioGroup>
 
                 <div>
                     {loading ? (

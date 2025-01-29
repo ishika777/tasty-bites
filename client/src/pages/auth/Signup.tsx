@@ -5,6 +5,8 @@ import { Eye, EyeOff, Loader2, LockKeyhole, Mail, PhoneCallIcon, User2 } from "l
 import { Link, useNavigate } from "react-router-dom";
 import { SignupInputState, userSignupSchema } from "@/schema/userSchema";
 import { useUserStore } from "@/store/useUserStore";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label";
 
 const Signup = () => {
 
@@ -16,14 +18,19 @@ const Signup = () => {
         fullname: "",
         email: "",
         password: "",
-        contact: ""
+        contact: "",
+        admin: "false"
     });
 
-    
+
 
     const changEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setInput({ ...input, [name]: value });
+    };
+
+    const handleRadioChange = (value: "true" | "false") => {
+        setInput((prev) => ({ ...prev, admin: value }));
     };
 
     const signupSubmitHandler = async (e: FormEvent) => {
@@ -33,22 +40,17 @@ const Signup = () => {
         const result = userSignupSchema.safeParse(input)
         if (!result.success) {
             const fieldErrors = result.error.formErrors.fieldErrors;
-            console.log(fieldErrors)
             setErrors(fieldErrors as Partial<SignupInputState>)
             return;
         }
         try {
-            await signup(input)
-            naviagte("/verify-email")
+            const success = await signup(input)
+            if(success){
+                naviagte("/verify-email")
+            }
         } catch (err) {
             console.log(err);
         }
-        setInput({
-            fullname: "",
-            email: "",
-            password: "",
-            contact: ""
-        });
     };
 
     return (
@@ -108,10 +110,10 @@ const Signup = () => {
                         />
                         {
                             seePassword ? (
-                                    <Eye size={18} onClick={() => setSeePassword(!seePassword)} className="absolute inset-y-2 right-2 top-3 text-gray-500" />
+                                <Eye size={18} onClick={() => setSeePassword(!seePassword)} className="absolute inset-y-2 right-2 top-3 text-gray-500" />
                             ) : (
-                                
-                                    <EyeOff size={18} onClick={() => setSeePassword(!seePassword)} className="absolute inset-y-2 right-2 top-3 text-gray-500" />
+
+                                <EyeOff size={18} onClick={() => setSeePassword(!seePassword)} className="absolute inset-y-2 right-2 top-3 text-gray-500" />
                             )
                         }
                         {
@@ -136,6 +138,19 @@ const Signup = () => {
                         }
                     </div>
                 </div>
+
+                <RadioGroup defaultValue={input.admin} name="admin" onValueChange={handleRadioChange}>
+                    <div className="flex items-center mb-6 gap-6">
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="false" id="r1"  />
+                            <Label htmlFor="r1">User</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="true" id="r2" />
+                            <Label htmlFor="r2">Admin</Label>
+                        </div>
+                    </div>
+                </RadioGroup>
 
                 <div>
                     {loading ? (

@@ -1,4 +1,4 @@
-import { RESTAURANT_API_END_POINT } from "@/constants/constants"
+// import { RESTAURANT_API_END_POINT } from "@/constants/constants"
 import { Orders } from "@/types/orderType"
 import { MneuItem, RestaurantState } from "@/types/restaurantType"
 import axios from "axios"
@@ -7,6 +7,9 @@ import {create} from "zustand"
 import {createJSONStorage, persist} from "zustand/middleware"
 
 axios.defaults.withCredentials = true;
+
+const RESTAURANT_API_END_POINT = import.meta.env.VITE_BACKEND_URL + "/api/v1/restaurant"
+
 
 export const useRestaurantStore = create<RestaurantState>()(persist((set, get) => ({
     loading : true,

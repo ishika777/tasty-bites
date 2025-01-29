@@ -1,10 +1,12 @@
-import { ORDER_API_END_POINT } from "@/constants/constants";
+// import { ORDER_API_END_POINT } from "@/constants/constants";
 import { CheckoutSessionRequest, OrderState } from "@/types/orderType";
 import axios from "axios";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 axios.defaults.withCredentials = true;
+
+const ORDER_API_END_POINT = import.meta.env.VITE_BACKEND_URL + "/api/v1/order"
 
 export const useOrderStore = create<OrderState>()(persist((set => ({
     loading: false,

@@ -1,4 +1,4 @@
-import { MENU_API_END_POINT } from "@/constants/constants";
+// import { MENU_API_END_POINT } from "@/constants/constants";
 import axios from "axios";
 import { toast } from "sonner";
 import {create} from "zustand"
@@ -6,6 +6,8 @@ import { createJSONStorage, persist } from "zustand/middleware"
 import { useRestaurantStore } from "./useRestaurantStore";
 
 axios.defaults.withCredentials = true;
+
+const MENU_API_END_POINT = import.meta.env.VITE_BACKEND_URL + "/api/v1/menu"
 
 type MenuState = {
     loading : boolean;

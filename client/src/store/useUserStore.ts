@@ -65,7 +65,7 @@ export const useUserStore = create<UserState>()(
                     console.log(error);
 
                     set({ loading: false });
-                    toast.error(error.response.data.message);
+                    toast.error(error.response?.data.message || error.message);
                 }
             },
             login: async (input: LoginInputState) => {
@@ -92,7 +92,7 @@ export const useUserStore = create<UserState>()(
                     console.log(error);
 
                     set({ loading: false });
-                    toast.error(error.response.data.message);
+                    toast.error(error.response?.data.message || error.message);
                 }
             },
             verifyEmail: async (verificationCode: string) => {

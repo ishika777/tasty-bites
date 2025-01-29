@@ -33,7 +33,7 @@ export const useMenuStore = create<MenuState>()(persist((set) => ({
             useRestaurantStore.getState().addMenuToRestaurant(response.data.menu)
         } catch (error: any) {
             set({loading : false})
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data.message || error.message)
         }
     },
     editMenu: async(menuId:string, formData : FormData) => {
@@ -52,7 +52,7 @@ export const useMenuStore = create<MenuState>()(persist((set) => ({
             useRestaurantStore.getState().updateMenuToRestaurant(response.data.menu)
         } catch (error: any) {
             set({loading : false})
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data.message || error.message)
         }
     },
 }),{

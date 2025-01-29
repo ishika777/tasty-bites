@@ -31,7 +31,7 @@ export const useRestaurantStore = create<RestaurantState>()(persist((set, get) =
             console.log(error);
             
             set({loading : false})
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data.message || error.message)
         }
     },
     getRestaurant : async() => {
@@ -50,7 +50,7 @@ export const useRestaurantStore = create<RestaurantState>()(persist((set, get) =
                 set({restaurant : null})
             }
             set({loading : false})
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data.message || error.message)
         }
     },
     updateRestaurant : async(formData : FormData) => {
@@ -68,7 +68,7 @@ export const useRestaurantStore = create<RestaurantState>()(persist((set, get) =
         } catch (error :any) {
             console.log(error);
             set({loading : false})
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data.message || error.message)
         }
     },
     addMenuToRestaurant : async(menu:MneuItem) => {
@@ -106,7 +106,7 @@ export const useRestaurantStore = create<RestaurantState>()(persist((set, get) =
         } catch (error :any) {
             console.log(error);
             set({loading : false})
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data.message || error.message)
         }
     },
     setAppliedFilter : (value : string) => {
@@ -133,7 +133,7 @@ export const useRestaurantStore = create<RestaurantState>()(persist((set, get) =
         } catch (error :any) {
             console.log(error);
 
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data.message || error.message)
         }
     },
     getRestaurantOrders : async() => {
@@ -152,7 +152,7 @@ export const useRestaurantStore = create<RestaurantState>()(persist((set, get) =
             console.log(error);
             
             set({loading : false})
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data.message || error.message)
         }
     },
     updateOrderStatus : async(orderId: string, status: string) => {
@@ -175,7 +175,7 @@ export const useRestaurantStore = create<RestaurantState>()(persist((set, get) =
             console.log(error);
             
             set({loading : false})
-            toast.error(error.response.data.message)
+            toast.error(error.response?.data.message || error.message)
         }
     },
 

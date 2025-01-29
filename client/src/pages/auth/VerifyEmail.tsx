@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useUserStore } from "@/store/useUserStore"
-import { Loader2 } from "lucide-react"
+import { Loader2, Moon, Sun } from "lucide-react"
 import { ChangeEvent, FormEvent, KeyboardEvent, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useThemeStore } from "@/store/useThemeStore";
 
 
 const VerifyEmail = () => {
@@ -12,6 +14,7 @@ const VerifyEmail = () => {
     const inputRef = useRef<any>([])
     const navigate = useNavigate()
     const {verifyEmail, loading} = useUserStore()
+    const {setTheme} = useThemeStore();
 
     const handleChange = (index: number, value: string) => {
         if(/^[a-zA-Z0-9]$/.test(value) || value === ""){
@@ -44,7 +47,22 @@ const VerifyEmail = () => {
     }
   return (
     <div className="flex items-center justify-center min-h-screen w-full">
-        <div className="p-8 rounded-md max-w-md flex flex-col gap-10 border border-gray-200">
+         <div className="absolute top-8 right-10">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="icon">
+                            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                            <span className="sr-only">Toggle theme</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+        <div className="p-8 rounded-md max-w-md flex flex-col gap-10 border border-gray-300">
             <div className="">
                 <h1 className="font-extrabold text-2xl">Verify your email</h1>
                 <p className="text-sm text-gray-600">Enter the 6 digit code sent to your email address</p>

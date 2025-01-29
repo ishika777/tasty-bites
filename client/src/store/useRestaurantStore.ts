@@ -1,4 +1,3 @@
-// import { RESTAURANT_API_END_POINT } from "@/constants/constants"
 import { Orders } from "@/types/orderType"
 import { MneuItem, RestaurantState } from "@/types/restaurantType"
 import axios from "axios"

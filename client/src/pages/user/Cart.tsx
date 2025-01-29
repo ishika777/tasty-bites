@@ -15,6 +15,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { CartItem } from "@/types/cartType";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
 
@@ -26,6 +27,11 @@ const Cart = () => {
     const formattedTotalAmt = new Intl.NumberFormat("en-IN", {
         maximumFractionDigits: 2, // Optional: for decimal precision
       }).format(totalAmt);
+
+
+      if(cart.length === 0) {
+            return <EmptyCart />
+        }
 
   return (
     <div className="flex flex-col max-w-7xl mx-auto my-10">
@@ -87,3 +93,19 @@ const Cart = () => {
 };
 
 export default Cart;
+
+const EmptyCart = () => {
+    return (
+        <div className="text-center h-full w-full mt-40 flex flex-col gap-1 items-center">
+            <h1 className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
+                Empty Cart
+            </h1>
+            <p></p>
+            <Link to="/">
+                <Button className="mt-4 bg-orange hover:bg-orangeHover">
+                    Continue Browsing
+                </Button>
+            </Link>
+        </div>
+    );
+};

@@ -21,6 +21,7 @@ export interface IOrder{
     deliveryDetails : deliveryDetails;
     cartItems : cartItems;
     totalAmount : number;
+    razorpayOrderId: string;
     status : "pending" | "confirmed" | "preparing" | "outfordelivery" | "delivered"
 }
 
@@ -85,6 +86,10 @@ const orderSchema = new mongoose.Schema<IOrderMenu>({
     totalAmount : {
         type : Number,
         required : true
+    },
+    razorpayOrderId: {
+        type: String,
+        required: true
     },
     status : {
         type : String,

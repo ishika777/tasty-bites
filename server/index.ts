@@ -4,16 +4,16 @@ import express from "express"
 const app = express()
 const PORT = process.env.PORT || 3000
 
-import connectDb from "./db/connectDb"
+import connectDb from "./db/connectDb.js"
 import bodyParser from "body-parser"
-import cookieParser = require("cookie-parser")
+import cookieParser from "cookie-parser"
 import cors from "cors"
-import path = require("path")
+import path from "path"
 
-import UserRouter from "./routes/user.route"
-import RestaurantRouter from "./routes/restaurant.route"
-import MenuRouter from "./routes/menu.route"
-import orderRouter from "./routes/order.route"
+import UserRouter from "./routes/user.route.js"
+import RestaurantRouter from "./routes/restaurant.route.js"
+import MenuRouter from "./routes/menu.route.js"
+import orderRouter from "./routes/order.route.js"
 
 const DIRNAME = path.resolve()
 

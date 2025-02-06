@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import Restaurant from "../models/restaurant.model";
-import Order from "../models/order.model";
-import Stripe from "stripe";
+import Order from "../models/order.model.js";
+import Razorpay from "razorpay";
 
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 type checkoutSessionRequestType = {
     cartItems : {
@@ -23,63 +22,69 @@ type checkoutSessionRequestType = {
 }
 
 
-// export const createCheckoutSession = async(req:Request, res:Response): Promise<void> => {
-//     try {
-//         const checkoutSessionRequest : checkoutSessionRequestType = req.body;
-//         console.log(checkoutSessionRequest)
-//         const restaurant = await Restaurant.findById(checkoutSessionRequest.restaurantId).populate("menus")
-        // if(!restaurant){
-        //     res.status(404).json({
-        //         success : false,
-        //         message : "Restaurant not found"
-        //     });
-        //     return;
-        // }
-        // const order :any = new Order({
-        //     restaurant : restaurant._id,
-        //     user : req.id,
-        //     deliveryDetails : checkoutSessionRequest.deliveryDetails,
-        //     cartItems : checkoutSessionRequest.cartItems,
-        //     status : "pending"
-        // })
+export const createCheckoutSession = async(req:Request, res:Response): Promise<void> => {
+    try {
+        const checkoutSessionRequest : checkoutSessionRequestType = req.body;
+        console.log(checkoutSessionRequest)
+        const totalAmount = checkoutSessionRequest.cartItems.reduce((total, item) => total + item.price * item.quantity, 0) * 100
+        const restaurant = await Restaurant.findById(checkoutSessionRequest.restaurantId).populate("menus")
+        if(!restaurant){
+            res.status(404).json({
+                success : false,
+                message : "Restaurant not found"
+            });
+            return;
+        }
+        const order :any = new Order({
+            restaurant : restaurant._id,
+            user : req.id,
+            deliveryDetails : checkoutSessionRequest.deliveryDetails,
+            cartItems : checkoutSessionRequest.cartItems,
+            totalAmount,
+            status : "pending"
+        })
         // const menuItems = restaurant.menus;
         // const lineItems = await createLineItems(checkoutSessionRequest, menuItems);
+        // console.log(lineItems)
+        
+        const razorpay = new Razorpay({
+            key_id: process.env.RAZORPAY_KEY_ID as string,
+            key_secret: process.env.RAZORPAY_KEY_SECRET as string
+        })
+        const razorpayOrderRequest = {
+            amount: totalAmount,
+            currency: "INR",
+            receipt: `receipt_order_${order._id}`,
+            notes: {
+                restaurantId: checkoutSessionRequest.restaurantId,
+                userId: req.id,
+                deliveryDetails: JSON.stringify(checkoutSessionRequest.deliveryDetails),
+                cartItems: JSON.stringify(checkoutSessionRequest.cartItems)
+            }
+        };
+        const razorpayOrder = await razorpay.orders.create(razorpayOrderRequest);
 
-        // const session = await stripe.checkout.sessions.create({
-        //     payment_method_types: ["card"],
-        //     shipping_address_collection: {
-        //         allowed_countries: ["GB", "US", "CA"]
-        //     },
-        //     line_items : lineItems,
-        //     mode : "payment",
-        //     success_url : `${process.env.FRONTEND_URL}/order/status`,
-        //     cancel_url : `${process.env.FRONTEND_URL}/cart`,
-        //     metadata : {
-        //         orderId : order._id.toString(),
-        //         images : JSON.stringify(menuItems.map((item:any) => {
-        //             return item.image
-        //         }))
-        //     }
-        // })
+        // Save Order in Database
+        order.razorpayOrderId = razorpayOrder.id;
+        await order.save();
+
+        res.status(200).json({
+            success: true,
+            options: {
+                message: "Payment initiated",
+                orderId: razorpayOrder.id,
+                amount: totalAmount,
+                currency: "INR",
+                key: process.env.RAZORPAY_KEY_ID, 
+            }
+        });
+        return;
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message : "Internal Server Error"})
         
-        // if(!session.url){
-        //     res.status(400).json({
-        //         success : false,
-        //         message : "Error while creating session"
-        //     });
-        //     return;
-        // }
-        // await order.save();
-        // res.status(200).json({
-        //     session
-        // });
-    //     return;
-    // } catch (error) {
-    //     console.log(error);
-    //     res.status(500).json({message : "Internal Server Error"})
-        
-    // }
-// }
+    }
+}
 
 // export const createLineItems = (checkoutSessionRequest:checkoutSessionRequestType, menuItems:any) => {
 //     //create line item

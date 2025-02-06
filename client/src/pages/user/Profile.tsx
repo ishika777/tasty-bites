@@ -93,7 +93,8 @@ const Profile = () => {
                 name="email"
                 value={profileData.email}
                 onChange={changeHandler}
-                className="w-full text-gray-600 bg-transparent focus-visible:ring-1 focus-visible:ring-transparent focus-visible:border-transparent outline-none border-none"
+                aria-disabled
+                className="w-full text-gray-600 cursor-not-allowed bg-transparent focus-visible:ring-1 focus-visible:ring-transparent focus-visible:border-transparent outline-none border-none"
                 />
 
             </div>

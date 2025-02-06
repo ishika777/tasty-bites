@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import User from "../models/user.model";
+import User from "../models/user.model.js";
 import bcrypt from "bcryptjs"
 import crypto from "crypto"
-import cloudinary from "../utils/cloudinary";
-import { generateVerificationCode } from "../utils/generateVerificationCode";
-import { generateToken } from "../utils/generateToken";
-import { sendPasswordResetEmail, sendResetSuccessfulEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
+import cloudinary from "../utils/cloudinary.js";
+import { generateVerificationCode } from "../utils/generateVerificationCode.js";
+import { generateToken } from "../utils/generateToken.js";
+import { sendPasswordResetEmail, sendResetSuccessfulEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email.js";
 
 
 export const signup = async(req:Request, res:Response): Promise<void> => {
@@ -77,7 +77,7 @@ export const login = async(req:Request, res:Response): Promise<void> => {
         if(user.admin !== (admin === "true" ? true : false)){
             res.status(400).json({
                 success : false,
-                message : "Incorrect profile selected"
+                message : "Incorrect email or password"
             });
             return;
         }

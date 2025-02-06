@@ -16,8 +16,8 @@ const AvailableMenu = ({menus} : {menus:MneuItem[]}) => {
         <div className="grid md:grid-cols-3 space-y-4 md:space-y-0">
             
             {
-                menus.map((menu:MneuItem) => (
-                    <Card className="md:max-w-xs mx-auto shadow-lg rounded-lg overflow-hidden border-none">
+                menus?.map((menu:MneuItem) => (
+                    <Card className="md:max-w-xs mx-auto shadow-lg mb-7 rounded-lg overflow-hidden border-none">
                         <img className="w-full h-70 object-cover" src={menu.image} alt="" />
                         <CardContent className="p-4">
                             <h2 className="text-xl font-semibold text-gray-800 dark:text-white">{menu.name}</h2>

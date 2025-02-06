@@ -1,7 +1,7 @@
 import express from "express";
-import { createRestaurant, getRestaurant, updateRestaurant, getRestaurantOrders, updateOrderStatus, searchRestaurant, getRestaurantDetails } from "../controllers/restaurant.controller";
-import { isAuthenticated } from "../middlwares/isAuthenticated";
-import upload from "../middlwares/multer";
+import { createRestaurant, getRestaurant, updateRestaurant, getRestaurantOrders, updateOrderStatus, searchRestaurant, getRestaurantDetails } from "../controllers/restaurant.controller.js";
+import { isAuthenticated } from "../middlwares/isAuthenticated.js";
+import upload from "../middlwares/multer.js";
 const router = express.Router()
 
 router.route("/").post(isAuthenticated, upload.single("imageFile"), createRestaurant)

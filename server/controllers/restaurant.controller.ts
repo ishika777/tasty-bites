@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Restaurant from "../models/restaurant.model";
-import Order from "../models/order.model";
-import uploadImageOnCloudinary from "../utils/imageUpload";
+import Restaurant from "../models/restaurant.model.js";
+import Order from "../models/order.model.js";
+import uploadImageOnCloudinary from "../utils/imageUpload.js";
 
 export const createRestaurant = async (req: Request, res: Response): Promise<void> => {
     try {

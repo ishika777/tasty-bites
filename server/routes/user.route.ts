@@ -1,7 +1,9 @@
 import express from "express";
-import { checkAuth, forgotPassword, login, logout, resetpassword, signup, updateProfile, verifyEmail } from "../controllers/user.controller";
-import { isAuthenticated } from "../middlwares/isAuthenticated";
+import { checkAuth, forgotPassword, login, logout, resetpassword, signup, updateProfile, verifyEmail } from "../controllers/user.controller.js";
+import { isAuthenticated } from "../middlwares/isAuthenticated.js";
 const router = express.Router()
+
+
 
 router.route("/check-auth").get(isAuthenticated, checkAuth)
 router.route("/signup").post(signup)
